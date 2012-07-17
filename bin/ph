@@ -1,0 +1,170 @@
+#!/usr/bin/perl
+use 5.16.0;
+use Pithub;
+use IO::Prompt;
+use LWP::UserAgent;
+use HTTP::Request;
+use JSON;
+use Data::Dumper; sub p { warn Dumper(@_); }
+use autodie ':system';
+use File::Basename ();
+use Cwd ();
+use Getopt::Long;
+
+my $agent = LWP::UserAgent->new(timeout => 10);
+$agent->env_proxy(); # for mattn
+my $token = `git config --get ph.token`;
+unless ($token) {
+    setup();
+}
+my $pithub = Pithub->new(
+    token => $token,
+    ua    => $agent,
+);
+main();
+exit;
+
+# ------------------------------------------------------------------------- 
+sub main {
+    my $cmd = shift @ARGV || 'help';
+    my $cmd_code = __PACKAGE__->can("CMD_$cmd")
+        or die "Unknown command $cmd";
+    $cmd_code->();
+}
+
+# ------------------------------------------------------------------------- 
+
+sub CMD_help {
+    say(<<"...");
+Usage: $0
+    $0 info miyagawa/Plack
+    $0 clone mattn/gal-vim
+    $0 import
+...
+}
+
+sub CMD_info {
+    my ($user, $repo) = _get_user_repo('info');
+    my $res = $pithub->repos->get(user => $user, repo => $repo);
+    $res->success or die dump_content($res->content);
+    dump_content($res->content);
+}
+
+sub CMD_clone {
+    my ($user, $repo) = _get_user_repo('clone');
+    my $res = $pithub->repos->get(user => $user, repo => $repo);
+    $res->success or die dump_content($res->content);
+    my $url = $res->content->{ssh_url} or die "Cannot get ssh_url";
+    system("git", "clone", $url);
+}
+
+sub CMD_import {
+    my $remote = 'origin';
+    my $homepage = '';
+    my $description = '';
+    my $private = 0;
+    GetOptions(
+        'remote=s'      => \$remote,
+        'homepage=s'    => \$homepage,
+        'description=s' => \$description,
+        'private'       => \$private,
+    );
+    if (`git config --local --get remote.$remote.fetch`) {
+        Carp::croak "Remote [$remote] already exists. Try specifying another one using --remote.";
+    }
+
+    my $pwd = Cwd::getcwd();
+    my $name = File::Basename::basename($pwd);
+    exit unless prompt("Can I import $pwd to $name in github? [Y/n] ", -yes);
+    my $res = $pithub->repos->create(
+        data => {
+            name        => $name,
+            homepage    => $homepage,
+            description => $description,
+            public      => $private ? 0 : 1,
+        }
+    );
+    $res->success or die dump_content($res->content);
+    dump_content($res->content);
+    my $ssh_url = $res->content->{ssh_url} // die "Missing ssh_url";
+
+    print "Adding GitHub repo $name as remote [$remote].\n";
+    system(qw(git remote add), $remote, $ssh_url);
+
+    if (!`git config --get branch.master.remote`) {
+        print "Setting up remote [$remote] for master branch.\n";
+        system(qw(git config branch.master.remote), $remote);
+        system(qw(git config branch.master.merge refs/heads/master));
+    }
+
+    print "Pushing to remote [$remote]\n";
+    system(qw(git push), $remote, qw(master));
+    print "Done.\n";
+}
+
+# ------------------------------------------------------------------------- 
+
+sub _get_user_repo {
+    my ($cmd) = @_;
+    my ($repo, $user);
+    if (@ARGV==2) {
+        ($user, $repo) = @ARGV;
+    } elsif (@ARGV==1) {
+        ($user, $repo) = split m{/}, $ARGV[0];
+    }
+    $user // die "$0 $cmd miyagawa/Plack";
+    return ($user, $repo);
+}
+
+our $DUMP_DEPTH = 0;
+sub dump_content {
+    local $DUMP_DEPTH = 0;
+    my $c = shift;
+    _dump_content($c);
+}
+sub _dump_content {
+    my $c = shift;
+    if (ref $c eq 'HASH') {
+        for my $key (sort keys $c) {
+            print(' ' x ($DUMP_DEPTH*2));
+            print($key . ': ');
+            if (ref $c->{$key} eq 'HASH') {
+                print("\n");
+                local $DUMP_DEPTH = $DUMP_DEPTH + 1;
+                _dump_content($c->{$key});
+            } else {
+                print("$c->{$key}");
+                print("\n");
+            }
+        }
+    }
+}
+
+# ------------------------------------------------------------------------- 
+sub setup {
+    say("setup ph. please input your id/pw to this prompt. password will not save to any location.");
+    my $user = prompt('user: ');
+    my $pass = prompt('pass: ', -echo => '*');
+    my $res = $agent->request(
+        do {
+            my $req = HTTP::Request->new(
+                POST => 'https://api.github.com/authorizations'
+                # GET => 'https://github.com/login/oauth/authorize?client_id=45ee252fecc56cd85629&scopes=delete_repo,public_repo,repo,gist,user'
+            );
+            $req->content(
+                encode_json({
+                    scopes => [qw(delete_repo public_repo repo gist user)],
+                })
+            );
+            $req->authorization_basic($user, $pass);
+            $req;
+        }
+    );
+    $res->is_success or die $res->as_string;
+    my $dat = decode_json($res->content);
+    $token = $dat->{token} || die "Cannot get token from API:\n\n" . $res->as_string;
+    $token =~ /^[A-Za-z0-9_-]+$/ or die "API token contains bad char: $token";
+    system('git', 'config', '--global', '--add', 'ph.token', $token) == 0 or die;
+    return;
+}
+

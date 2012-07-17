@@ -12,9 +12,10 @@ my $build = Module::Build->new(
     },
     configure_requires   => { 'Module::Build' => '0.38' },
     requires             => {
-        # 'Exporter'                      => '0',
         'parent'                        => '0',
-        # 'Plack'                         => '0.9949',
+        'autodie' => 0,
+        'IPC::System::Simple' => 0,
+        'Pithub' => 0,
     },
 
     no_index    => { 'directory' => [ 'inc' ] },

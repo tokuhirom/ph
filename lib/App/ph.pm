@@ -13,21 +13,25 @@ __END__
 
 =head1 NAME
 
-App::ph - A module for you
+App::ph - yet another github client command
 
 =head1 SYNOPSIS
 
-  use App::ph;
+    $ ph info mattn gal-vim
+    $ ph clone mattn gal-vim
+    $ ph import
 
 =head1 DESCRIPTION
 
-App::ph is
+App::ph is yet another github client command, supports github API v3.
 
 =head1 AUTHOR
 
 Tokuhiro Matsuno E<lt>tokuhirom AAJKLFJEF@ GMAIL COME<gt>
 
 =head1 SEE ALSO
+
+L<App::gh>, L<Pithub>
 
 =head1 LICENSE
 
