@@ -1,7 +1,6 @@
 #!/usr/bin/perl
 use 5.16.0;
 use Pithub;
-use IO::Prompt;
 use LWP::UserAgent;
 use HTTP::Request;
 use JSON;
@@ -10,6 +9,34 @@ use autodie ':system';
 use File::Basename ();
 use Cwd ();
 use Getopt::Long;
+use Term::ReadKey;
+
+sub prompt {
+    my ($prompt, %args) = @_;
+    local $| = 1;
+    my $phrase = '';
+    print $prompt;
+    ReadMode 'cbreak';
+    while (1) {
+        my $c = ReadKey ~0/2-1;
+        if ($c =~ /[\r\n]/) {
+            print "\n";
+            last;
+        }
+        elsif ($c eq "\b" || ord $c == 127) {
+            next unless length $phrase;
+            chop $phrase;
+            next if defined $args{-echo} && length $args{-echo} eq 0;
+            print "\b \b";
+        }
+        elsif (ord $c) {
+            $phrase .= $c;
+            print defined $args{-echo} ?  $args{-echo} : $c;
+        }
+    }
+    ReadMode 'restore';
+    $phrase;
+}
 
 my $agent = LWP::UserAgent->new(timeout => 10);
 $agent->env_proxy(); # for mattn
@@ -164,7 +191,7 @@ sub setup {
     my $dat = decode_json($res->content);
     $token = $dat->{token} || die "Cannot get token from API:\n\n" . $res->as_string;
     $token =~ /^[A-Za-z0-9_-]+$/ or die "API token contains bad char: $token";
-    system('git', 'config', '--global', '--add', 'ph.token', $token) == 0 or die;
+    system("git config --global --add ph.token $token") == 0 or die;
     return;
 }
 
