@@ -1,5 +1,7 @@
-#!/usr/bin/perl
-use 5.16.0;
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use 5.14.0;
 use Pithub;
 use LWP::UserAgent;
 use HTTP::Request;
@@ -83,6 +85,20 @@ sub CMD_clone {
     $res->success or die dump_content($res->content);
     my $url = $res->content->{ssh_url} or die "Cannot get ssh_url";
     system("git", "clone", $url);
+}
+
+sub CMD_all {
+    my ($user) = shift @ARGV;
+    $user or die "Usage: $0 all tokuhirom";
+    my $res = $pithub->repos->list(user => $user);
+    $res->success or die dump_content($res->content);
+    $res->auto_pagination(1);
+    while (my $row = $res->next) {
+        say("-------- $row->{name} --------");
+        next if $row->{fork}; # skip forked repos
+        next if -e $row->{name};
+        system("git", "clone", $row->{ssh_url});
+    }
 }
 
 sub CMD_import {
