@@ -43,7 +43,9 @@ sub prompt {
 my $agent = LWP::UserAgent->new(timeout => 10);
 $agent->env_proxy(); # for mattn
 my $token = `git config --get ph.token`;
-unless ($token) {
+my $me = `git config --get ph.user`;
+chomp $me;
+unless ($token && $me) {
     setup();
 }
 my $pithub = Pithub->new(
@@ -205,7 +207,7 @@ sub _dump_content {
 # ------------------------------------------------------------------------- 
 sub setup {
     say("setup ph. please input your id/pw to this prompt. password will not save to any location.");
-    my $user = prompt('user: ');
+    $me = prompt('user: ');
     my $pass = prompt('pass: ', -echo => '*');
     my $res = $agent->request(
         do {
@@ -218,7 +220,7 @@ sub setup {
                     scopes => [qw(delete_repo public_repo repo gist user)],
                 })
             );
-            $req->authorization_basic($user, $pass);
+            $req->authorization_basic($me, $pass);
             $req;
         }
     );
@@ -226,6 +228,12 @@ sub setup {
     my $dat = decode_json($res->content);
     $token = $dat->{token} || die "Cannot get token from API:\n\n" . $res->as_string;
     $token =~ /^[A-Za-z0-9_-]+$/ or die "API token contains bad char: $token";
+    {
+        no autodie;
+        system("git config --global --unset-all ph.user");
+        system("git config --global --unset-all ph.token");
+    }
+    system("git config --global --add ph.user $me") == 0 or die;
     system("git config --global --add ph.token $token") == 0 or die;
     return;
 }
