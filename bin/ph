@@ -189,7 +189,12 @@ sub _get_user_repo {
     if (@ARGV==2) {
         ($user, $repo) = @ARGV;
     } elsif (@ARGV==1) {
-        ($user, $repo) = split m{/}, $ARGV[0];
+        if ($ARGV[0] =~ m{/}) {
+            ($user, $repo) = split m{/}, $ARGV[0];
+        }
+        else {
+            ($user, $repo) = ($me, $ARGV[0]);
+        }
     }
     $user // die "$0 $cmd miyagawa/Plack";
     return ($user, $repo);
