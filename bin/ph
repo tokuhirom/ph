@@ -99,6 +99,12 @@ sub CMD_clone {
     system("git", "clone", $url);
 }
 
+sub CMD_fork {
+    my ($user, $repo) = _get_user_repo('fork');
+    my $res = $pithub->repos->forks->create(user => $user, repo => $repo);
+    $res->success or die dump_content($res->content);
+}
+
 sub CMD_pull {
     my ($num) = pop @ARGV;
     my $remote;
