@@ -169,6 +169,11 @@ sub CMD_import {
         print "Setting up remote [$remote] for master branch.\n";
         system(qw(git config branch.master.remote), $remote);
         system(qw(git config branch.master.merge refs/heads/master));
+        my $rebase = `git config --get branch.autosetuprebase`;
+        chomp $rebase;
+        if ($rebase && ($rebase eq 'remote' || $rebase eq 'always')) {
+            system(qw(git config branch.master.rebase true));
+        }
     }
 
     print "Pushing to remote [$remote]\n";
