@@ -118,6 +118,26 @@ sub CMD_pull {
     system("git", "fetch", $remote, "refs/pull/$num/head:pull-$num");
 }
 
+sub CMD_pullreq {
+    my ($title, $branch, $desc) = splice(@ARGV, 2);
+    $title or die "Usage: $0 pullreq tokuhirom ph 'pull req title'";
+    $branch ||= `git symbolic-ref -q HEAD` || 'master';
+    $desc   ||= '';
+
+    my ($user, $repo) = _get_user_repo('clone');
+    my $res = $pithub->pull_requests->create(
+        user => $user,
+        repo => $repo,
+        data => {
+            title => $title,
+            body  => $desc,
+            head  => "$me:$branch",
+            base  => 'master',
+        },
+    );
+    $res->success or die dump_content($res->content);
+}
+
 sub CMD_all {
     my ($user) = shift @ARGV;
     $user or die "Usage: $0 all tokuhirom";
