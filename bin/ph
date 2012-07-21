@@ -138,6 +138,15 @@ sub CMD_pullreq {
     $res->success or die dump_content($res->content);
 }
 
+sub CMD_add {
+    my ($user, $repo) = _get_user_repo('clone');
+    my $res = $pithub->repos->get(user => $user, repo => $repo);
+    $res->success or die dump_content($res->content);
+    my $url = $res->content->{ssh_url} or die "Cannot get ssh_url";
+    system("git remote add $user $url");
+    system("git fetch $user");
+}
+
 sub CMD_all {
     my ($user) = shift @ARGV;
     $user or die "Usage: $0 all tokuhirom";
