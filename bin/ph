@@ -87,6 +87,25 @@ sub CMD_clone {
     system("git", "clone", $url);
 }
 
+sub CMD_pull {
+    my ($num) = pop @ARGV;
+    my $remote;
+    if (@ARGV) {
+        $remote = shift @ARGV;
+    }
+    else {
+        my $branch = `git symbolic-ref -q HEAD`;
+        chomp $branch;
+        $branch ||= 'master';
+        $branch =~ s{refs/heads/}{};
+        warn $branch;
+        $remote = `git config branch.$branch.remote`;
+        chomp $remote;
+    }
+    warn join(" ", "git", "fetch", $remote, "refs/pull/$num/head:pull-$num");
+    system("git", "fetch", $remote, "refs/pull/$num/head:pull-$num");
+}
+
 sub CMD_all {
     my ($user) = shift @ARGV;
     $user or die "Usage: $0 all tokuhirom";
