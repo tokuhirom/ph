@@ -82,7 +82,17 @@ sub CMD_info {
 }
 
 sub CMD_clone {
+    my $fork;
+    if ($ARGV[0] eq '--fork') {
+        $fork = 1;
+        shift @ARGV;
+    }
     my ($user, $repo) = _get_user_repo('clone');
+    if ($fork) {
+        my $res = $pithub->repos->forks->create(user => $user, repo => $repo);
+        $res->success or die dump_content($res->content);
+        $user = $me;
+    }
     my $res = $pithub->repos->get(user => $user, repo => $repo);
     $res->success or die dump_content($res->content);
     my $url = $res->content->{ssh_url} or die "Cannot get ssh_url";
