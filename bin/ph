@@ -14,7 +14,9 @@ use Getopt::Long;
 use Term::ReadKey;
 
 sub prompt {
-    my ($prompt, %args) = @_;
+    my ($prompt, @args) = @_;
+    push @args, 1 if @args % 2;
+    my %args = @args;
     local $| = 1;
     my $phrase = '';
     print $prompt;
@@ -37,7 +39,7 @@ sub prompt {
         }
     }
     ReadMode 'restore';
-    $phrase;
+    $args{-yes} ? ($phrase =~ /^y/i) : $phrase;
 }
 
 my $agent = LWP::UserAgent->new(timeout => 10);
