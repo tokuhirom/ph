@@ -16,6 +16,7 @@ my $build = Module::Build->new(
         'autodie' => 0,
         'IPC::System::Simple' => 0,
         'Pithub' => 0,
+        'Term::ReadKey' => 0,
     },
 
     no_index    => { 'directory' => [ 'inc' ] },
