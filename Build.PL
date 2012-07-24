@@ -23,7 +23,7 @@ my $build = Module::Build->new(
     name        => 'App-ph',
     module_name => 'App::ph',
 
-    # script_files => [''],
+    script_files => ['bin/ph'],
 
     test_files => (-d '.git' || $ENV{RELEASE_TESTING}) ? 't/ xt/' : 't/',
     recursive_test_files => 1,
