@@ -103,8 +103,12 @@ sub CMD_clone {
 
 sub CMD_fork {
     my ($user, $repo) = _get_user_repo_with_current_repo('fork');
+    print("Forking $user/$repo\n");
     my $res = $pithub->repos->forks->create(user => $user, repo => $repo);
     $res->success or die dump_content($res->content);
+    my $ssh_url = $res->content->{ssh_url} // die dump_content($res->content);
+    system("git", "remote", "add", $me, $ssh_url);
+    system("git remote -v"); # show current settings.
 }
 
 sub CMD_pull {
