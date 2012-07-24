@@ -102,7 +102,7 @@ sub CMD_clone {
 }
 
 sub CMD_fork {
-    my ($user, $repo) = _get_user_repo('fork');
+    my ($user, $repo) = _get_user_repo_with_current_repo('fork');
     my $res = $pithub->repos->forks->create(user => $user, repo => $repo);
     $res->success or die dump_content($res->content);
 }
@@ -220,8 +220,7 @@ sub CMD_import {
 
 # ------------------------------------------------------------------------- 
 
-sub _get_user_repo {
-    my ($cmd) = @_;
+sub _get_user_repo_simple() {
     my ($repo, $user);
     if (@ARGV==2) {
         ($user, $repo) = @ARGV;
@@ -233,7 +232,23 @@ sub _get_user_repo {
             ($user, $repo) = ($me, $ARGV[0]);
         }
     }
-    $user // die "$0 $cmd miyagawa/Plack";
+    return ($user, $repo);
+}
+
+sub _get_user_repo {
+    my ($cmd) = @_;
+    my ($user, $repo) = _get_user_repo_simple();
+    $user // die "Usage: $0 $cmd miyagawa/Plack";
+    return ($user, $repo);
+}
+
+sub _get_user_repo_with_current_repo {
+    my ($cmd) = @_;
+    my ($user, $repo) = _get_user_repo_simple();
+    unless ($user && $repo) {
+        ($user, $repo) = (`git remote -v` =~ m{git://github\.com\/([^/ ]+)\/([^/ ]+)\.git});
+    }
+    ($user && $repo) // die "Usage: $0 $cmd miyagawa/Plack";
     return ($user, $repo);
 }
 
