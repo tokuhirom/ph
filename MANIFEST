@@ -1,7 +1,12 @@
+bin/ph
 Build.PL
 Changes
 lib/App/ph.pm
+LICENSE
 MANIFEST			This list of files
+META.json
+META.yml
+README
 t/00_compile.t
 xt/01_podspell.t
 xt/02_perlcritic.t
