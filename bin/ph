@@ -12,6 +12,7 @@ use File::Basename ();
 use Cwd ();
 use Getopt::Long;
 use Term::ReadKey;
+use Sys::Hostname;
 
 sub prompt {
     my ($prompt, @args) = @_;
@@ -61,7 +62,7 @@ exit;
 sub main {
     my $cmd = shift @ARGV || 'help';
     my $cmd_code = __PACKAGE__->can("CMD_$cmd")
-        or die "Unknown command $cmd";
+        or die "Unknown command $cmd\n";
     $cmd_code->();
 }
 
@@ -132,7 +133,7 @@ sub CMD_pull {
 
 sub CMD_pullreq {
     my ($title, $branch, $desc) = splice(@ARGV, 2);
-    $title or die "Usage: $0 pullreq tokuhirom ph 'pull req title'";
+    $title or die "Usage: $0 pullreq tokuhirom ph 'pull req title'\n";
     $branch ||= `git symbolic-ref -q HEAD` || 'master';
     $desc   ||= '';
 
@@ -161,7 +162,7 @@ sub CMD_add {
 
 sub CMD_all {
     my ($user) = shift @ARGV;
-    $user or die "Usage: $0 all tokuhirom";
+    $user or die "Usage: $0 all tokuhirom\n";
     my $res = $pithub->repos->list(user => $user);
     $res->success or die dump_content($res->content);
     $res->auto_pagination(1);
@@ -242,7 +243,7 @@ sub _get_user_repo_simple() {
 sub _get_user_repo {
     my ($cmd) = @_;
     my ($user, $repo) = _get_user_repo_simple();
-    $user // die "Usage: $0 $cmd miyagawa/Plack";
+    $user // die "Usage: $0 $cmd miyagawa/Plack\n";
     return ($user, $repo);
 }
 
@@ -293,6 +294,7 @@ sub setup {
             );
             $req->content(
                 encode_json({
+                    note   => 'App::ph on ' . Sys::Hostname::hostname,
                     scopes => [qw(delete_repo public_repo repo gist user)],
                 })
             );
