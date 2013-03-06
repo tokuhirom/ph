@@ -12,6 +12,7 @@ use File::Basename ();
 use Cwd ();
 use Getopt::Long;
 use Term::ReadKey;
+use Sys::Hostname;
 
 sub prompt {
     my ($prompt, @args) = @_;
@@ -293,6 +294,7 @@ sub setup {
             );
             $req->content(
                 encode_json({
+                    note   => 'App::ph on ' . Sys::Hostname::hostname,
                     scopes => [qw(delete_repo public_repo repo gist user)],
                 })
             );
