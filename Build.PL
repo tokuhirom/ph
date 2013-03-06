@@ -17,6 +17,7 @@ my $build = Module::Build->new(
         'IPC::System::Simple' => 0,
         'Pithub' => 0,
         'Term::ReadKey' => 0,
+        'Sys::Hostname' => 0,
     },
 
     no_index    => { 'directory' => [ 'inc' ] },
