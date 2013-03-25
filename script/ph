@@ -257,9 +257,15 @@ sub _get_user_repo_with_current_repo {
     my ($cmd) = @_;
     my ($user, $repo) = _get_user_repo_simple();
     unless ($user && $repo) {
-        ($user, $repo) = (`git remote -v` =~ m{git://github\.com\/([^/ ]+)\/([^/ ]+)\.git});
+        my $remote = `git remote -v`;
+        if ($remote =~ m{git://github\.com\/([^/ ]+)\/([^/ ]+)\.git}) {
+            ($user, $repo) = ($1, $2);
+        } elsif ($remote =~ m{git\@github\.com:([^/]+)/([^/]+)\.git}) {
+            ($user, $repo) = ($1, $2);
+        } else {
+            die "Usage: $0 $cmd plack/Plack\n";
+        }
     }
-    ($user && $repo) // die "Usage: $0 $cmd miyagawa/Plack";
     return ($user, $repo);
 }
 
