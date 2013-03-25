@@ -23,11 +23,13 @@ App::ph - yet another github client command
 
 =head1 DESCRIPTION
 
-App::ph is yet another github client command, supports github API v3.
+App::ph is yet another github client command, supports github API version 3.
+
+Please look L<ph> for more details.
 
 =head1 AUTHOR
 
-Tokuhiro Matsuno E<lt>tokuhirom AAJKLFJEF@ GMAIL COME<gt>
+Tokuhiro Matsuno E<lt>tokuhirom @ GMAIL COME<gt>
 
 =head1 SEE ALSO
 

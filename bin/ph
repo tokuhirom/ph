@@ -13,6 +13,7 @@ use Cwd ();
 use Getopt::Long;
 use Term::ReadKey;
 use Sys::Hostname;
+use Pod::Usage;
 
 sub prompt {
     my ($prompt, @args) = @_;
@@ -69,12 +70,7 @@ sub main {
 # ------------------------------------------------------------------------- 
 
 sub CMD_help {
-    say(<<"...");
-Usage: $0
-    $0 info miyagawa/Plack
-    $0 clone mattn/gal-vim
-    $0 import
-...
+    pod2usage(-verbose => 2);
 }
 
 sub CMD_info {
@@ -315,4 +311,54 @@ sub setup {
     system("git config --global --add ph.token $token") == 0 or die;
     return;
 }
+
+__END__
+
+=pod
+
+=head1 NAME
+
+ph - Github CLI client
+
+=head1 SYNOPSIS
+
+    $ ph info mattn gal-vim
+    $ ph clone mattn gal-vim
+    $ ph import
+
+=head1 DESCRIPTION
+
+ph is yet another Github CLI client.
+
+=head1 SUB COMMANDS
+
+=head2 ph import
+
+    % ph import
+
+This command import current directory to the github.
+
+=head2 ph fork
+
+    % ph fork tokuhirom Minilla
+
+This command forks the repository to your github account.
+
+=head2 ph info
+
+   % ph info mattn gal-vim
+
+This command displays information of the repository.
+
+=head2 ph help
+
+    % ph help
+
+Shows this help page.
+
+=head2 ph all
+
+    % ph all $USERNAME
+
+Clone all repository in your account
 
