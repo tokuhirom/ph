@@ -14,6 +14,7 @@ use Getopt::Long;
 use Term::ReadKey;
 use Sys::Hostname;
 use Pod::Usage;
+use Term::ANSIColor;
 
 sub prompt {
     my ($prompt, @args) = @_;
@@ -71,6 +72,15 @@ sub main {
 
 sub CMD_help {
     pod2usage(-verbose => 2);
+}
+
+sub CMD_issues {
+    my ($user, $repo) = _get_user_repo_with_current_repo('issues');
+    my $res = $pithub->issues->list(user => $user, repo => $repo);
+    while ( my $row = $res->next ) {
+        printf("#%s %s - %s\n", colored(['green'], $row->{number}), $row->{title}, colored(['Cyan'], $row->{user}->{login}));
+        printf("%s\n\n", colored(['white'], $row->{html_url}));
+    }
 }
 
 sub CMD_info {
@@ -361,4 +371,10 @@ Shows this help page.
     % ph all $USERNAME
 
 Clone all repository in your account
+
+=head2 ph issues
+
+    % ph issues
+
+Show list of issues for current project.
 
