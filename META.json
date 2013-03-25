@@ -1,0 +1,52 @@
+{
+   "abstract" : "yet another github client command",
+   "author" : [
+      "Tokuhiro Matsuno <tokuhirom @ GMAIL COM>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Minilla/v0.0.49, CPAN::Meta::Converter version 2.120921",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "ph",
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "Test::More" : "0.98",
+            "Test::Requires" : "0"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "Module::Build::Tiny" : "0"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "IPC::System::Simple" : "0",
+            "Pithub" : "0",
+            "Sys::Hostname" : "0",
+            "Term::ReadKey" : "0",
+            "autodie" : "0",
+            "parent" : "0"
+         }
+      }
+   },
+   "release_status" : "unstable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/tokuhirom/ph/issues"
+      },
+      "homepage" : "https://github.com/tokuhirom/ph",
+      "repository" : {
+         "type" : "git",
+         "url" : "git://github.com/tokuhirom/ph.git",
+         "web" : "https://github.com/tokuhirom/ph"
+      }
+   },
+   "version" : "0.02"
+}
