@@ -30,6 +30,7 @@
             "IPC::System::Simple" : "0",
             "Pithub" : "0",
             "Sys::Hostname" : "0",
+            "Term::ANSIColor" : "0",
             "Term::ReadKey" : "0",
             "autodie" : "0",
             "parent" : "0"
@@ -48,5 +49,5 @@
          "web" : "https://github.com/tokuhirom/ph"
       }
    },
-   "version" : "0.03"
+   "version" : "0.04"
 }

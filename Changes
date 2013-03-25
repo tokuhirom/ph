@@ -1,6 +1,13 @@
 Revision history for Perl extension App::ph
 
 {{$NEXT}}
+0.04 2013-03-25T22:25:51Z
+
+    - Automatic username/repository name aggregation for ssh repository URI
+      (tokuhirom)
+    - Added `ph issues` sub command
+      (tokuhirom)
+
 0.03 2013-03-25T22:18:29Z
 
     - Added documents
