@@ -70,7 +70,7 @@ sub main {
 # ------------------------------------------------------------------------- 
 
 sub CMD_help {
-    pod2usage(1);
+    pod2usage(-verbose => 2);
 }
 
 sub CMD_info {
@@ -314,9 +314,17 @@ sub setup {
 
 __END__
 
+=pod
+
 =head1 NAME
 
 ph - Github CLI client
+
+=head1 SYNOPSIS
+
+    $ ph info mattn gal-vim
+    $ ph clone mattn gal-vim
+    $ ph import
 
 =head1 DESCRIPTION
 
