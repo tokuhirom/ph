@@ -1,6 +1,12 @@
 Revision history for Perl extension App::ph
 
 {{$NEXT}}
+
+0.05 2013-03-26T22:36:03Z
+
+    - [Bug fix] Prompt says [Y/n] but 'n' is default.
+      (reported by miyagawa++)
+
 0.04 2013-03-25T22:25:51Z
 
     - Automatic username/repository name aggregation for ssh repository URI
