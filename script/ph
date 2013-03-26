@@ -197,7 +197,7 @@ sub CMD_import {
 
     my $pwd = Cwd::getcwd();
     my $name = File::Basename::basename($pwd);
-    exit unless prompt("Can I import $pwd to $name in github? [Y/n] ", -yes);
+    exit unless prompt("Can I import $pwd to $name in github? [y/N] ", -yes);
     my $res = $pithub->repos->create(
         data => {
             name        => $name,
