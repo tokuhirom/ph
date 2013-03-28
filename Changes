@@ -2,6 +2,10 @@ Revision history for Perl extension App::ph
 
 {{$NEXT}}
 
+0.06 2013-03-28T02:50:25Z
+
+    - packaging, again
+
 0.05 2013-03-26T22:36:03Z
 
     - [Bug fix] Prompt says [Y/n] but 'n' is default.
