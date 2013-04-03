@@ -13,6 +13,16 @@
       "version" : "2"
    },
    "name" : "ph",
+   "no_index" : {
+      "directory" : [
+         "t",
+         "xt",
+         "inc",
+         "share",
+         "eg",
+         "examples"
+      ]
+   },
    "prereqs" : {
       "build" : {
          "requires" : {
@@ -22,7 +32,19 @@
       },
       "configure" : {
          "requires" : {
+            "CPAN::Meta" : "0",
+            "CPAN::Meta::Prereqs" : "0",
+            "Module::Build" : "0.38",
             "Module::Build::Tiny" : "0"
+         }
+      },
+      "develop" : {
+         "requires" : {
+            "Pod::Wordlist::hanekomu" : "0",
+            "Test::CPAN::Meta" : "0",
+            "Test::MinimumVersion" : "0.10108",
+            "Test::Pod" : "1.41",
+            "Test::Spelling" : "0"
          }
       },
       "runtime" : {
@@ -33,7 +55,8 @@
             "Term::ANSIColor" : "0",
             "Term::ReadKey" : "0",
             "autodie" : "0",
-            "parent" : "0"
+            "parent" : "0",
+            "perl" : "5.008008"
          }
       }
    },
@@ -49,5 +72,11 @@
          "web" : "https://github.com/tokuhirom/ph"
       }
    },
-   "version" : "0.06"
+   "version" : "0.06",
+   "x_contributors" : [
+      "mattn <mattn.jp@gmail.com>",
+      "Jesse Luehrs <doy@tozt.net>",
+      "Chris Weyl <cweyl@alumni.drew.edu>",
+      "tokuhirom <tokuhirom@gmail.com>"
+   ]
 }
