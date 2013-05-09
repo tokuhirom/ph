@@ -15,6 +15,13 @@ use Term::ReadKey;
 use Sys::Hostname;
 use Pod::Usage;
 use Term::ANSIColor;
+use Encode ();
+use Encode::Locale;
+
+if (-t) {
+    binmode STDOUT, ":encoding(console_out)";
+    binmode STDERR, ":encoding(console_out)";
+}
 
 sub prompt {
     my ($prompt, @args) = @_;

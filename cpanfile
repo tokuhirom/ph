@@ -5,6 +5,8 @@ requires 'Term::ReadKey';
 requires 'autodie';
 requires 'parent';
 requires 'Term::ANSIColor';
+requires 'Encode';
+requires 'Encode::Locale';
 
 on configure => sub {
     requires 'Module::Build::Tiny';
