@@ -2,6 +2,11 @@ Revision history for Perl extension App::ph
 
 {{$NEXT}}
 
+0.08 2013-05-29T08:39:16Z
+
+    - depended on perl 5.10.0;
+      (tokuhirom)
+
 0.07 2013-04-03T06:40:22Z
 
     - no Module::Build::Tiny

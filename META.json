@@ -77,7 +77,7 @@
          "web" : "https://github.com/tokuhirom/ph"
       }
    },
-   "version" : "0.07",
+   "version" : "0.08",
    "x_contributors" : [
       "mattn <mattn.jp@gmail.com>",
       "Jesse Luehrs <doy@tozt.net>",
