@@ -25,18 +25,11 @@
       ]
    },
    "prereqs" : {
-      "build" : {
-         "requires" : {
-            "Test::More" : "0.98",
-            "Test::Requires" : "0"
-         }
-      },
       "configure" : {
          "requires" : {
             "CPAN::Meta" : "0",
             "CPAN::Meta::Prereqs" : "0",
-            "Module::Build" : "0.38",
-            "Module::Build::Tiny" : "0"
+            "Module::Build" : "0.38"
          }
       },
       "develop" : {
@@ -63,7 +56,12 @@
             "Term::ReadKey" : "0",
             "autodie" : "0",
             "parent" : "0",
-            "perl" : "5.008008"
+            "perl" : "5.010000"
+         }
+      },
+      "test" : {
+         "requires" : {
+            "Test::More" : "0.98"
          }
       }
    },

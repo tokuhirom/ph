@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
-use 5.14.0;
+use 5.010000;
 use Pithub;
 use LWP::UserAgent;
 use HTTP::Request;
@@ -292,7 +292,7 @@ sub dump_content {
 sub _dump_content {
     my $c = shift;
     if (ref $c eq 'HASH') {
-        for my $key (sort keys $c) {
+        for my $key (sort keys %$c) {
             print(' ' x ($DUMP_DEPTH*2));
             print($key . ': ');
             if (ref $c->{$key} eq 'HASH') {

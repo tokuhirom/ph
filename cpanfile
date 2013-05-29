@@ -1,3 +1,5 @@
+requires 'perl', '5.010000';
+
 requires 'IPC::System::Simple';
 requires 'Pithub';
 requires 'Sys::Hostname';
@@ -13,11 +15,6 @@ requires 'JSON';
 requires 'LWP::UserAgent';
 requires 'Pod::Usage';
 
-on configure => sub {
-    requires 'Module::Build::Tiny';
-};
-
-on build => sub {
+on test => sub {
     requires 'Test::More', '0.98';
-    requires 'Test::Requires';
 };
