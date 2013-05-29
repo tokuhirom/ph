@@ -18,6 +18,8 @@ use Term::ANSIColor;
 use Encode ();
 use Encode::Locale;
 
+our $VERSION = '0.07';
+
 if (-t) {
     binmode STDOUT, ":encoding(console_out)";
     binmode STDERR, ":encoding(console_out)";
@@ -79,6 +81,11 @@ sub main {
 
 sub CMD_help {
     pod2usage(-verbose => 2);
+}
+
+sub CMD_version {
+    print "$VERSION\n";
+    exit 0;
 }
 
 sub CMD_issues {
@@ -384,6 +391,10 @@ Shows this help page.
     % ph all $USERNAME
 
 Clone all repository in your account
+
+=head2 ph version
+
+Show the version number.
 
 =head2 ph issues
 
