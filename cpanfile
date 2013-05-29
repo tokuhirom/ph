@@ -7,6 +7,11 @@ requires 'parent';
 requires 'Term::ANSIColor';
 requires 'Encode';
 requires 'Encode::Locale';
+requires 'Getopt::Long';
+requires 'HTTP::Request';
+requires 'JSON';
+requires 'LWP::UserAgent';
+requires 'Pod::Usage';
 
 on configure => sub {
     requires 'Module::Build::Tiny';
