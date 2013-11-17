@@ -1,4 +1,4 @@
-Revision history for Perl extension App::ph
+Revision history for Perl module App::ph
 
 {{$NEXT}}
 
@@ -37,5 +37,7 @@ Revision history for Perl extension App::ph
     - Name our token, so we can tell what/where it is from the Applications page
       (RsrchBoy)
 
-0.01    Wed Jul 18 06:17:15 2012
+0.01 2012-09-01
+
     - original version
+
