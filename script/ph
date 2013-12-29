@@ -308,26 +308,10 @@ sub _dump_content {
 }
 
 # ------------------------------------------------------------------------- 
-sub setup {
-    say("setup ph. please input your id/pw to this prompt. password will not save to any location.");
-    $me = prompt('user: ');
-    my $pass = prompt('pass: ', -echo => '*');
-    my $res = $agent->request(
-        do {
-            my $req = HTTP::Request->new(
-                POST => 'https://api.github.com/authorizations'
-                # GET => 'https://github.com/login/oauth/authorize?client_id=45ee252fecc56cd85629&scopes=delete_repo,public_repo,repo,gist,user'
-            );
-            $req->content(
-                encode_json({
-                    note   => 'App::ph on ' . Sys::Hostname::hostname,
-                    scopes => [qw(delete_repo public_repo repo gist user)],
-                })
-            );
-            $req->authorization_basic($me, $pass);
-            $req;
-        }
-    );
+
+sub save_auth_result {
+    my $res = shift;
+
     $res->is_success or die $res->as_string;
     my $dat = decode_json($res->content);
     $token = $dat->{token} || die "Cannot get token from API:\n\n" . $res->as_string;
@@ -339,7 +323,51 @@ sub setup {
     }
     system("git config --global --add ph.user $me") == 0 or die;
     system("git config --global --add ph.token $token") == 0 or die;
-    return;
+}
+
+sub request_basic {
+    my ($user, $password, $otp) = @_;
+    my $res = $agent->request(
+        do {
+            my $req = HTTP::Request->new(
+                POST => 'https://api.github.com/authorizations'
+                # GET => 'https://github.com/login/oauth/authorize?client_id=45ee252fecc56cd85629&scopes=delete_repo,public_repo,repo,gist,user'
+            );
+            if (defined $otp) {
+                $req->header('X-GitHub-OTP' => $otp);
+            }
+            $req->content(
+                encode_json({
+                    note   => 'App::ph on ' . Sys::Hostname::hostname,
+                    scopes => [qw(delete_repo public_repo repo gist user)],
+                })
+            );
+            $req->authorization_basic($me, $password);
+            $req;
+        }
+    );
+    return $res;
+}
+
+sub setup {
+    say("setup ph. please input your id/pw to this prompt. password will not save to any location.");
+    $me = prompt('user: ');
+    my $pass = prompt('pass: ', -echo => '*');
+    # request with basic auth.
+    my $res = request_basic($me, $pass);
+    if ($res->is_success) {
+        save_auth_result($res);
+        return;
+    } else {
+        if ($res->header('X-GitHub-OTP') =~ 'required') {
+            my $otp = prompt('otp for 2-factor authentication: ');
+            my $res = request_basic($me, $pass, $otp);
+            save_auth_result($res);
+            return;
+        } else {
+            die $res->as_string;
+        }
+    }
 }
 
 __END__
