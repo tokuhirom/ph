@@ -12,7 +12,7 @@ App::ph - yet another github client command
 
 App::ph is yet another github client command, supports github API version 3.
 
-Please look [ph](http://search.cpan.org/perldoc?ph) for more details.
+Please look [ph](https://metacpan.org/pod/ph) for more details.
 
 # AUTHOR
 
@@ -20,7 +20,7 @@ Tokuhiro Matsuno <tokuhirom @ GMAIL COM>
 
 # SEE ALSO
 
-[App::gh](http://search.cpan.org/perldoc?App::gh), [Pithub](http://search.cpan.org/perldoc?Pithub)
+[App::gh](https://metacpan.org/pod/App::gh), [Pithub](https://metacpan.org/pod/Pithub)
 
 # LICENSE
 

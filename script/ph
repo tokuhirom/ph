@@ -18,7 +18,7 @@ use Term::ANSIColor;
 use Encode ();
 use Encode::Locale;
 
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 
 if (-t) {
     binmode STDOUT, ":encoding(console_out)";
